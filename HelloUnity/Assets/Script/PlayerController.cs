@@ -3,20 +3,37 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float playerMaxHp = 120;
+    [SerializeField] private Button btnLeft;
+    [SerializeField] private Button btnRight;
 
     private float playerHp;
     public float radius = 1f;
     private CatEscapeGameDirector gameDirector;
 
-    // Start is called before the first frame update
-    void Start()
+    public void Awake()
     {
         playerHp = playerMaxHp;
         this.gameDirector = GameObject.FindObjectOfType<CatEscapeGameDirector>();
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
+        //this.btnLeft.onClick.AddListener(this.LeftButtonClick);
+        //this.btnRight.onClick.AddListener(this.RightButtonClick);
+        this.btnLeft.onClick.AddListener(() => {
+            Debug.Log("왼쪽 화살표 버튼 클릭");
+            this.transform.Translate(-2, 0, 0);
+        });
+        this.btnRight.onClick.AddListener(() => {
+            Debug.Log("오른쪽 화살표 버튼 클릭");
+            this.transform.Translate(2, 0, 0);
+        });
+
     }
 
     // Update is called once per frame
@@ -62,21 +79,30 @@ public class PlayerController : MonoBehaviour
             //}
         }
     }
-        //이벤트 함수
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(this.transform.position, this.radius);
-        }
-        public void Hit(float arrowdamage)
-        {
-            playerHp -= arrowdamage;
-            //Debug.Log(playerHp / playerMaxHp);
-            gameDirector.DecreaseHp(playerHp / playerMaxHp);
-        }
-
-        public float GetHp()
-        {
-            return playerHp;
-        }
+    //이벤트 함수
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(this.transform.position, this.radius);
     }
+    public void Hit(float arrowdamage)
+    {
+        playerHp -= arrowdamage;
+        //Debug.Log(playerHp / playerMaxHp);
+        gameDirector.DecreaseHp(playerHp / playerMaxHp);
+    }
+
+    public float GetHp()
+    {
+        return playerHp;
+    }
+
+    public void LeftButtonClick()
+    {
+        Debug.Log("LeftButtonClick");
+    }
+    public void RightButtonClick()
+    {
+        Debug.Log("RightButtonClick");
+    }
+}
