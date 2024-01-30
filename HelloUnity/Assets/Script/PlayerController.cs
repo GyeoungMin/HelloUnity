@@ -28,10 +28,18 @@ public class PlayerController : MonoBehaviour
         this.btnLeft.onClick.AddListener(() => {
             Debug.Log("왼쪽 화살표 버튼 클릭");
             this.transform.Translate(-2, 0, 0);
+            float clampX = Mathf.Clamp(this.transform.position.x, -8f, 8f);
+            Vector3 pos = this.transform.position;
+            pos.x = clampX;
+            this.transform.position = pos;
         });
         this.btnRight.onClick.AddListener(() => {
             Debug.Log("오른쪽 화살표 버튼 클릭");
             this.transform.Translate(2, 0, 0);
+            float clampX = Mathf.Clamp(this.transform.position.x, -8f, 8f);
+            Vector3 pos = this.transform.position;
+            pos.x = clampX;
+            this.transform.position = pos;
         });
 
     }
