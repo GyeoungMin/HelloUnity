@@ -9,9 +9,9 @@ public class CatController : MonoBehaviour
     [SerializeField] private float jumpForce = 680f;
     [SerializeField] private float moveForce = 3f;
     [SerializeField] private ClimbCloudGameDirector gameDirector;
-
+    [SerializeField] private GameObject flagGo;
     private Animator anim;
-
+    private bool hasCollider = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -42,9 +42,8 @@ public class CatController : MonoBehaviour
         if (directionX != 0f)
         {
             this.transform.localScale = new Vector3(directionX, 1f, 1f);
-            this.anim.speed = Mathf.Abs(this.rbody.velocity.x) / 2f;
         }
-
+        this.anim.speed = Mathf.Abs(this.rbody.velocity.x) / 2f;
 
         //도전 ! : 속도를 제한하자
         if (Mathf.Abs(this.rbody.velocity.x) < 3f)
@@ -64,8 +63,12 @@ public class CatController : MonoBehaviour
     //Trigger모드일 경우 충돌 판정을 해주는 이벤트 함수
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (hasCollider)
+        {
+            return;
+        }
         Debug.LogFormat("Enter2D : {0}", collision);
-
         SceneManager.LoadScene(1);
+        hasCollider = true;
     }
 }
