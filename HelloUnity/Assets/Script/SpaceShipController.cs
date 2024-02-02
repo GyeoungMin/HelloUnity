@@ -5,11 +5,16 @@ using UnityEngine;
 
 public class SpaceShipController : MonoBehaviour
 {
-    [SerializeField] private float maxSpeed = 3f;
+    public enum State
+    {
+        Idle, LeftMove, RightMove
+    }
 
+    [SerializeField] private float maxSpeed = 0.1f;
+    [SerializeField] private Animator anim;
     private Coroutine moveCoroutine;
     private Coroutine shootCoroutine;
-    
+    private State state;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,17 +32,41 @@ public class SpaceShipController : MonoBehaviour
     {
         while (true)
         {
-            this.transform.Translate(Input.GetAxisRaw("Horizontal") * Vector3.right * maxSpeed * Time.deltaTime);
-            this.transform.Translate(Input.GetAxisRaw("Vertical") * Vector3.up * maxSpeed * Time.deltaTime);
+            float speed = this.maxSpeed;
+            float hMove = Input.GetAxisRaw("Horizontal");
+            float vMove = Input.GetAxisRaw("Vertical");
+            Vector3 direction = new Vector3 (hMove, vMove,0);
+            switch (hMove)
+            {
+                case -1f:
+                    SetState(State.LeftMove);
+                    break;
+                case 1f:
+                    SetState(State.RightMove);
+                    break;
+                default:
+                    SetState(State.Idle);
+                        break;
+            }
+            this.transform.Translate(direction.normalized * speed * Time.deltaTime);
+
             float clampX = Mathf.Clamp(this.transform.position.x, -2.3f, 2.3f);
-            float clampY = Mathf.Clamp(this.transform.position.y, -3.5f, 5.45f);
-            Vector3 pos = this.transform.position;
-            pos.x = clampX;
-            pos.y = clampY;
-            this.transform.position = pos;
+            float clampY = Mathf.Clamp(this.transform.position.y, -3.5f, 5.5f);
+            //Vector3 pos = this.transform.position;
+            //pos.x = clampX;
+            //pos.y = clampY;
+            this.transform.position = new Vector2(clampX, clampY);
             yield return null;
         }
     }
 
+    void SetState(State state)
+    {
+        if (this.state != state)
+        {
+            this.state = state;
+            this.anim.SetInteger("State", (int)state);
+        }
+    }
 
 }
