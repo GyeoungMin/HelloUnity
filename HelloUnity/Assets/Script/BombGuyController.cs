@@ -105,7 +105,6 @@ public class BombGuyController : MonoBehaviour
             Vector3 pos = this.transform.position;
             pos.x = clampX;
             this.transform.position = pos;
-            yield return null; //다음프레임으로 넘어간다.
 
             float length = this.flagTransform.position.x - this.transform.position.x;
             //Debug.LogFormat("이동중.. 남은거리  : {0}", length);
@@ -114,6 +113,7 @@ public class BombGuyController : MonoBehaviour
                 this.anim.SetInteger("State", (int)State.Idle);
                 break;  //while문을 벗어난다 
             }
+            yield return null; //다음프레임으로 넘어간다.
         }
         Debug.Log("이동완료");
         callback();
