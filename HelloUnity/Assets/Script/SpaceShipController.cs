@@ -12,14 +12,23 @@ public class SpaceShipController : MonoBehaviour
 
     [SerializeField] private float maxSpeed = 0.1f;
     [SerializeField] private Animator anim;
+    [SerializeField] private GameObject bulletGenerator;
+    [SerializeField] private GameObject boomPrefab;
+
+    private Transform firePoint;
     private Coroutine moveCoroutine;
-    private Coroutine shootCoroutine;
+    private Coroutine boomCoroutine;
+    private Component fire;
     private State state;
+    private float power;
     // Start is called before the first frame update
     void Start()
     {
+        //this.fire = bulletGenerator.GetComponent<BulletGenerator>();
+        this.firePoint = this.transform.Find("FirePoint");
         this.moveCoroutine = this.StartCoroutine(CoMove());
-        this.shootCoroutine = this.StartCoroutine(CoMove());
+        this.boomCoroutine = this.StartCoroutine(CoBoomFire());
+        //this.shootCoroutine = this.StartCoroutine(CoFire());
     }
 
     // Update is called once per frame
@@ -28,6 +37,14 @@ public class SpaceShipController : MonoBehaviour
         //Debug.Log(Input.GetAxisRaw("Jump"));
     }
 
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.layer == LayerMask.NameToLayer("Item"))
+        {
+            //Debug.Log(collider.transform.tag);
+            this.GetItem(collider.transform.tag);
+        }
+    }
     IEnumerator CoMove()
     {
         while (true)
@@ -35,7 +52,7 @@ public class SpaceShipController : MonoBehaviour
             float speed = this.maxSpeed;
             float hMove = Input.GetAxisRaw("Horizontal");
             float vMove = Input.GetAxisRaw("Vertical");
-            Vector3 direction = new Vector3 (hMove, vMove,0);
+            Vector3 direction = new Vector3(hMove, vMove, 0);
             switch (hMove)
             {
                 case -1f:
@@ -46,7 +63,7 @@ public class SpaceShipController : MonoBehaviour
                     break;
                 default:
                     SetState(State.Idle);
-                        break;
+                    break;
             }
             this.transform.Translate(direction.normalized * speed * Time.deltaTime);
 
@@ -59,7 +76,48 @@ public class SpaceShipController : MonoBehaviour
             yield return null;
         }
     }
-
+    IEnumerator CoBoomFire()
+    {
+        while(true)
+        {
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                Debug.Log("Boom!");
+                Instantiate(boomPrefab);
+            }
+            yield return null;
+        }
+    }
+    private void GetItem(string name)
+    {
+        //Debug.Log(name);
+        switch (name)
+        {
+            case "Boom": break;
+            case "Coin": break;
+            case "Power": PowerUp(); break;
+        }
+    }
+    public float Power { get { return this.power; } }
+    private void PowerUp()
+    {
+        if (this.power < 2)
+        {
+            this.power += 1f;
+            bulletGenerator.GetComponent<BulletGenerator>().PowerUp();
+        }
+    }
+    //IEnumerator CoFire()
+    //{
+    //    while (true)
+    //    {
+    //        if (Input.GetKeyDown(KeyCode.Space))
+    //        {
+    //            bulletGenerator.GetComponent<BulletGenerator>().Fire(firePoint);
+    //        }
+    //        yield return null;
+    //    }
+    //}
     void SetState(State state)
     {
         if (this.state != state)

@@ -18,31 +18,32 @@ public class EnemyController : MonoBehaviour
     private Coroutine hitCoroutine;
     private Coroutine skipCoroutine;
     private float hp;
+    private ItemGenerator itemGenerator;
     // Start is called before the first frame update
     void Start()
     {
+        this.itemGenerator = GameObject.Find("ItemGenerator").GetComponent<ItemGenerator>();
         this.hp = this.maxHp;
         this.hitCoroutine = this.StartCoroutine(CoHit(() =>
         {
-            this.skipCoroutine = this.StartCoroutine(this.SkipFrame(5, () =>
+            this.skipCoroutine = this.StartCoroutine(this.SkipFrame(15, () =>
             {
-                this.StopCoroutine(skipCoroutine);
+                this.StopCoroutine(this.skipCoroutine);
+                //Debug.Log(this.gameObject.ToString());
+                this.ItemGenerator();
                 Destroy(this.gameObject);
             }));
         }));
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-
-    }
-
     void OnTriggerEnter2D(Collider2D collider)
     {
-        SetState(State.Hit);
-        hp -= 1f;
+        if (collider.transform.CompareTag("PlayerBullet"))
+        {
+            SetState(State.Hit);
+            this.hp -= collider.GetComponent<BulletController>().Damage;
+            //this.hp -= 1f;
+        }
     }
 
     IEnumerator CoHit(System.Action callback)
@@ -54,13 +55,13 @@ public class EnemyController : MonoBehaviour
                 case State.Idle:
                     break;
                 case State.Hit:
-                    this.skipCoroutine = this.StartCoroutine(this.SkipFrame(5,() =>
+                    this.skipCoroutine = this.StartCoroutine(this.SkipFrame(5, () =>
                     {
                         this.StopCoroutine(skipCoroutine);
                         if (this.hp <= 0)
                         {
                             SetState(State.Explosion);
-                            this.GetComponent<PolygonCollider2D>().isTrigger = false;
+                            Destroy(this.GetComponent<Rigidbody2D>());
                             callback();
                         }
                         else
@@ -70,13 +71,13 @@ public class EnemyController : MonoBehaviour
 
                     }));
                     break;
-                //case State.Explosion:
-                //    this.skipCoroutine = this.StartCoroutine(this.SkipFrame(15,() =>
-                //    {
-                //        this.StopCoroutine(skipCoroutine);
-                //        Destroy(this.gameObject);
-                //    }));
-                //    break;
+                    //case State.Explosion:
+                    //    this.skipCoroutine = this.StartCoroutine(this.SkipFrame(15,() =>
+                    //    {
+                    //        this.StopCoroutine(skipCoroutine);
+                    //        Destroy(this.gameObject);
+                    //    }));
+                    //    break;
             }
             yield return null;
         }
@@ -98,4 +99,25 @@ public class EnemyController : MonoBehaviour
         }
 
     }
+    private void ItemGenerator()
+    {
+        if (this.transform.CompareTag("EnemyC"))
+        {
+            this.itemGenerator.ItemInstantiate(this.transform.position);
+        }
+        if (this.transform.CompareTag("EnemyB"))
+        {
+            float isItem = Random.Range(0, 6);
+            Debug.Log(isItem);
+            if (isItem == 0)
+            {
+                this.itemGenerator.GetComponent<ItemGenerator>().ItemInstantiate(this.transform.position);
+            }
+        }
+    }
+    //public void Hit(float damage)
+    //{
+    //    SetState(State.Hit);
+    //    this.hp -= damage;
+    //}
 }
