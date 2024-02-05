@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/ClimbCloud.unity
-    guid: 480c577359da8f143b88944145587712
+    path: Assets/Scenes/AppleCatch.unity
+    guid: f9ba4092254974d468d501e4bfbcdd91
   - enabled: 1
-    path: Assets/Scenes/ClimbCloudClear.unity
-    guid: 96853f3e49afb094e996e99727377052
+    path: Assets/Scenes/AppleCatchGameResultScene.unity
+    guid: 97a43f5abcb33c64583a72187168f7a8
   m_configObjects: {}

@@ -6,35 +6,34 @@ public class AppleCatchItemGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject applePrefab;
     [SerializeField] private GameObject bombPrefab;
+    [SerializeField] private GameObject gameDirectorGo;
 
     private Coroutine coroutine;
+    private bool timeUp;
     // Start is called before the first frame update
     void Start()
     {
+        timeUp = false;
         coroutine = StartCoroutine(CoGenerate(() =>
         {
             StopCoroutine(coroutine);
         }));
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     IEnumerator CoGenerate(System.Action callback)
     {
         while (true)
         {
+            timeUp = gameDirectorGo.GetComponent<AppleCatchGameDirector>().timeUp;
+            if (timeUp)
+            {
+                break;
+            }
             ItemInstantiate(applePrefab);
             ItemInstantiate(bombPrefab);
             for (int i = 0; i < 60; i++)
             {
                 yield return null;
-            }
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                break;
             }
         }
         callback();

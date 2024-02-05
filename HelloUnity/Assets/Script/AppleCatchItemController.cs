@@ -18,12 +18,6 @@ public class AppleCatchItemController : MonoBehaviour
         }));
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     IEnumerator CoDrop(System.Action callback)
     {
         while (true)

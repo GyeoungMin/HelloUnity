@@ -246,6 +246,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   applePrefab: {fileID: 3857718015159249849, guid: f9146ef572b7b2741a6723e7e1b7c582, type: 3}
   bombPrefab: {fileID: 1876538651678641854, guid: 81c425ab418fceb469bd07b4e734ddff, type: 3}
+  gameDirectorGo: {fileID: 1317823598}
 --- !u!4 &416135112
 Transform:
   m_ObjectHideFlags: 0
@@ -888,6 +889,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   appleSfx: {fileID: 8300000, guid: 169629decd03e2f42af4c413a5519cd2, type: 3}
   bombSfx: {fileID: 8300000, guid: 082d43e84fd1f834aa35e3cbceb3ca2f, type: 3}
+  gameDirectorGo: {fileID: 1317823598}
 --- !u!65 &2937266090899771730
 BoxCollider:
   m_ObjectHideFlags: 0
